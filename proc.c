@@ -342,7 +342,7 @@ scheduler(void)
       c->proc = p;
       switchuvm(p);
       p->state = RUNNING;
-
+      p->priority = 7;
       swtch(&(c->scheduler), p->context);
       switchkvm();
 
@@ -552,7 +552,7 @@ int cps(void) {
       state = states[p->state];
     else
       state = "???";
-    cprintf("(%d, %s, %s)\n", p->pid, p->name, state);
+    cprintf("(%d, %s, %s, %d)\n", p->pid, p->name, state, p->priority);
   }
   return 0;
 }
