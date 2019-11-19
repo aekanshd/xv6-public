@@ -183,6 +183,7 @@ UPROGS=\
 	_zombie\
 	_myprog\
 	_fp\
+	_ps\
 
 fs.img: mkfs README $(UPROGS)
 	./mkfs fs.img README $(UPROGS)
@@ -257,6 +258,7 @@ EXTRA=\
 	.gdbinit.tmpl gdbutil\
 	myprog.c\
 	fp.c\
+	ps.c\
 
 dist:
 	rm -rf dist
