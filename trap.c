@@ -7,6 +7,7 @@
 #include "x86.h"
 #include "traps.h"
 #include "spinlock.h"
+extern int mappages(pde_t *pgdir, void *va, uint size, uint pa, int perm);
 
 // Interrupt descriptor table (shared by all CPUs).
 struct gatedesc idt[256];
@@ -14,6 +15,7 @@ extern uint vectors[];  // in vectors.S: array of 256 entry pointers
 struct spinlock tickslock;
 uint ticks;
 
+char * mem;
 void
 tvinit(void)
 {
@@ -77,6 +79,17 @@ trap(struct trapframe *tf)
             cpuid(), tf->cs, tf->eip);
     lapiceoi();
     break;
+  case T_PGFLT:
+    // alloc PA
+    
+    mem = kalloc();
+
+    memset(mem, 0, PGSIZE);
+    uint a = rcr2();
+    a=PGROUNDDOWN(a);
+    mappages(myproc()->pgdir, (char*) a, PGSIZE,(uint)mem - KERNBASE, PTE_W | PTE_U);
+    break;
+  
 
   //PAGEBREAK: 13
   default:
